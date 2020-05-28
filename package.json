@@ -1,7 +1,8 @@
 {
   "name": "lightcubetimer",
-  "version": "0.1.0",
+  "version": "10000.0.0",
   "private": true,
+  "homepage": "./",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -9,7 +10,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.4",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",
