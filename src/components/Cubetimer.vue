@@ -56,7 +56,8 @@ export default {
         isDNF: false,
         isPenalty: false
       },
-      currentState: 0,
+      keyDownState: 0,
+      keyUpState: 0,
       currentScramble: 0,
       currentInspectTimer: {},
       now: 0,
@@ -64,6 +65,9 @@ export default {
     }
   },
   computed: {
+    currentState: function() {
+      return this.keyDownState + this.keyUpState
+    },
     display: function () {
       switch (this.currentState) {
       case 2:
@@ -140,23 +144,50 @@ export default {
       if (e.target.classList.contains('ignore-press-timer')) return
 
       switch (e.type) {
-        case 'keyup':
         case 'keydown':
           if ( e.code != 'Space' || e.repeat ) return
+          this.downTimer(e)
+          break
+        case 'keyup':
+          this.upTimer(e)
           break
         case 'touchstart':
           if ( e.touches.length != 1 ) return
+          this.downTimer(e)
           break
         case 'touchend':
           if ( e.touches.length != 0 ) return
+          this.upTimer(e)
           break
         default:
           return
       }
+    },
+    downTimer: function (e) {
+      // ignore-press-timerクラスが付いてるものをタップした時は無視
+      if (e.target.classList.contains('ignore-press-timer')) return
 
-      this.currentState += 1
+      if (this.keyUpState == this.keyDownState) {
+        if (this.keyDownState == 3) {
+          this.keyDownState = this.keyUpState = 0
+        }
+        this.keyDownState += 1
+      }
 
-      switch (this.currentState) {
+      this.currentState = this.keyUpState + this.KeyDownState
+      this.actionTimer(this.keyUpState + this.keyDownState)
+    },
+    upTimer: function (e) {
+      // ignore-press-timerクラスが付いてるものをタップした時は無視
+      if (e.target.classList.contains('ignore-press-timer')) return
+
+      this.keyUpState = this.keyDownState
+
+      this.currentState = this.keyUpState + this.keyDownState
+      this.actionTimer(this.keyUpState + this.keyDownState)
+    },
+    actionTimer: function(state) {
+      switch (state) {
       case 2: // inspect
         this.startInspection()
         break;
@@ -165,10 +196,6 @@ export default {
         break;
       case 5:  // result
         this.stopTimer()
-        break;
-      case 7:  // inspect
-        // start inspect
-        this.currentState = 1
         break;
       }
     },

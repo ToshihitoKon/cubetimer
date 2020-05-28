@@ -6,8 +6,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
-    "deploy": rsync -rv dist/* tkon.space:~/v114514/cubetimer
+    "lint": "vue-cli-service lint",
+    "deploy": "rsync -rv dist/* tkon.space:~/v114514/cubetimer"
   },
   "dependencies": {
     "core-js": "^3.6.4",
