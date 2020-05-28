@@ -4,24 +4,25 @@
     v-bind:class="stateClass"
    >
     <div class="container pt-4">
-      <h4 class="text-dark text-center mt-4">
+      <h4 class="text-dark text-center mt-4 select-none">
         {{ currentScramble }}: {{ scrambles[currentScramble] }}
       </h4>
-      <h3 class="text-dark text-center">
+      <h3 class="text-dark text-center select-none">
         {{ stateToString( currentState ) }}
       </h3>
-      <h1 class="text-dark text-center">
+      <h1 class="text-dark text-center select-none">
         {{ display }}
       </h1>
       <div class="text-center">
         <div class="btn-group mt-2">
-          <button type="button" v-on:click="setPenalty" class="btn btn-light ignore-press-timer">+2</button>
-          <button type="button" v-on:click="setDNF" class="btn btn-light ignore-press-timer">DNF</button>
+          <button type="button" v-on:click="setPenalty" class="btn btn-light ignore-press-timer select-none">+2</button>
+          <button type="button" v-on:click="setDNF" class="btn btn-light ignore-press-timer select-none">DNF</button>
         </div>
       </div>
       <div class="card mt-4">
         <div class="card-body">
           <span
+            class="select-none"
             v-for="(time,index) in times"
             v-bind:key="index"
             >
@@ -289,6 +290,10 @@ export default {
 <style>
 .fullheight {
   height: 100%
+}
+
+.select-none {
+  user-select: none
 }
 
 .standby {
