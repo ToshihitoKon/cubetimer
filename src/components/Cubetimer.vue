@@ -4,39 +4,54 @@
     v-bind:class="stateClass"
    >
     <div class="container pt-4">
-      <h4 class="text-dark text-center mt-4 select-none">
-        {{ currentScramble }}: {{ scrambles[currentScramble] }}
-      </h4>
+      <div
+        style="height: 100px">
+        <div
+          v-if="displayScramble"
+          class="card">
+          <h5 class="text-dark text-center my-2 select-none">
+            {{ currentScramble }}th
+          </h5>
+          <h4 class="text-dark text-center my-2 select-none">
+            {{ scrambles[currentScramble-1] }}
+          </h4>
+        </div>
+      </div>
       <h3 class="text-dark text-center select-none">
         {{ stateToString( currentState ) }}
       </h3>
       <h1 class="text-dark text-center select-none">
         {{ display }}
       </h1>
-      <div class="text-center">
-        <div class="btn-group mt-2">
-          <button type="button" v-on:click="setPenalty" class="btn btn-light ignore-press-timer select-none">+2</button>
-          <button type="button" v-on:click="setDNF" class="btn btn-light ignore-press-timer select-none">DNF</button>
-        </div>
-      </div>
-      <div class="card mt-4">
-        <div class="card-body">
-          <span
-            class="select-none"
-            v-for="(time,index) in times"
-            v-bind:key="index"
-            >
-            {{ index }}: {{ timeToResultText(time) }}<br>
-          </span>
-          <div v-if="isAfter5">
-            Avg of 5: {{ toDisplayTime(ao5) }}
+      <div
+        v-if="displayScramble"
+        class="text-center">
+        <div>
+          <div class="btn-group mt-2">
+            <button type="button" v-on:click="setPenalty" class="btn btn-light ignore-press-timer select-none">+2</button>
+            <button type="button" v-on:click="setDNF" class="btn btn-light ignore-press-timer select-none">DNF</button>
+            <button type="button" v-on:click="cancelLastTime" class="btn btn-light ignore-press-timer select-none">やり直し</button>
           </div>
         </div>
-      </div>
-      <div class="input-group mt-4" v-if="isAfter5">
-        <textarea v-model="resultText" id="result" class="form-control ignore-press-timer" style="white-space: pre" />
-        <div class="input-group-prepend">
-          <button type="button" v-on:click="copyResult" class="btn btn-info ignore-press-timer">結果をｺﾎﾟｲｰ</button>
+        <div class="card mt-4">
+          <div class="card-body">
+            <span
+              class="select-none"
+              v-for="(time,index) in times"
+              v-bind:key="index"
+              >
+              {{ index + 1 }}: {{ timeToResultText(time) }}<br>
+            </span>
+            <div v-if="isAfter5">
+              Avg of 5: {{ toDisplayTime(ao5) }}
+            </div>
+          </div>
+        </div>
+        <div class="input-group mt-4" v-if="isAfter5">
+          <textarea v-model="resultText" id="result" class="form-control ignore-press-timer" style="white-space: pre" />
+          <div class="input-group-prepend">
+            <button type="button" v-on:click="copyResult" class="btn btn-info ignore-press-timer">結果をｺﾎﾟｲｰ</button>
+          </div>
         </div>
       </div>
     </div>
@@ -58,7 +73,7 @@ export default {
       },
       keyDownState: 0,
       keyUpState: 0,
-      currentScramble: 0,
+      currentScramble: 1,
       currentInspectTimer: {},
       now: 0,
       resultText: ''
@@ -67,6 +82,16 @@ export default {
   computed: {
     currentState: function() {
       return this.keyDownState + this.keyUpState
+    },
+    displayScramble: function() {
+      switch (this.currentState) {
+      case 0:
+      case 1:
+      case 5:
+      case 6:
+        return true
+      }
+      return false
     },
     display: function () {
       switch (this.currentState) {
@@ -237,6 +262,14 @@ export default {
       const timer = this.currentTimerProps
       timer.isPenalty = true
       this.updateCurrentTimer(timer)
+    },
+    cancelLastTime: function() {
+      if(1 < this.currentScramble){
+        this.currentScramble -= 1
+      }
+      var times = this.times
+      times.splice(this.currentScramble - 1, 1)
+      this.times = times
     },
 
     // filtersみたいなやつら
