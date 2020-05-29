@@ -5,7 +5,7 @@
    >
     <div class="container pt-4">
       <div
-        style="height: 100px">
+        style="min-height: 100px">
         <div
           v-if="displayScramble"
           class="card">
