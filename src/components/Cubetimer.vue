@@ -30,7 +30,7 @@
           <div class="btn-group mt-2">
             <button type="button" v-on:click="setPenalty" class="btn btn-light ignore-press-timer select-none">+2</button>
             <button type="button" v-on:click="setDNF" class="btn btn-light ignore-press-timer select-none">DNF</button>
-            <button type="button" v-on:click="cancelLastTime" class="btn btn-light ignore-press-timer select-none">やり直し</button>
+            <button type="button" v-on:click="cancelLastTime" class="btn btn-light ignore-press-timer select-none">ひとつ戻る</button>
           </div>
         </div>
         <div class="card mt-4">
@@ -264,12 +264,14 @@ export default {
       this.updateCurrentTimer(timer)
     },
     cancelLastTime: function() {
-      if(1 < this.currentScramble){
-        this.currentScramble -= 1
+      if (window.confirm('直前の記録を削除します。よろしいですか？')) {
+        if(1 < this.currentScramble){
+          this.currentScramble -= 1
+        }
+        var times = this.times
+        times.splice(this.currentScramble - 1, 1)
+        this.times = times
       }
-      var times = this.times
-      times.splice(this.currentScramble - 1, 1)
-      this.times = times
     },
 
     // filtersみたいなやつら
