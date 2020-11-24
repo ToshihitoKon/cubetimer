@@ -7,24 +7,24 @@
       <div
         style="min-height: 100px">
         <div
-          v-if="displayScramble"
+          v-if="isDisplayScramble"
           class="card">
           <h5 class="text-dark text-center my-2 select-none">
             {{ currentScramble }}th
           </h5>
           <h4 class="text-dark text-center my-2 select-none">
-            {{ scrambles[currentScramble-1] }}
+            {{ displayScramble }}
           </h4>
         </div>
       </div>
       <h3 class="text-dark text-center select-none">
-        {{ stateToString( currentState ) }}
+        {{ stateToString() }}
       </h3>
       <h1 class="text-dark text-center select-none">
         {{ display }}
       </h1>
       <div
-        v-if="displayScramble"
+        v-if="isDisplayScramble"
         class="text-center">
         <div>
           <div class="btn-group mt-2">
@@ -83,7 +83,7 @@ export default {
     currentState: function() {
       return this.keyDownState + this.keyUpState
     },
-    displayScramble: function() {
+    isDisplayScramble: function() {
       switch (this.currentState) {
       case 0:
       case 1:
@@ -124,6 +124,13 @@ export default {
     },
     isAfter5: function() {
       return this.times.length >= 5
+    },
+    displayScramble: function(){
+      const scrText = this.scrambles[this.currentScramble-1]
+      if(typeof(scrText) == 'string') {
+        return scrText.match(/\w(\d|')?/g).join(' ')
+      }
+      return '' 
     }
   },
   mounted () {
@@ -154,13 +161,7 @@ export default {
       window.addEventListener('touchend',this.pressTimer, false)
     },
     setScramble: function() {
-      this.scrambles = [
-        this.$route.query.scr1,
-        this.$route.query.scr2,
-        this.$route.query.scr3,
-        this.$route.query.scr4,
-        this.$route.query.scr5
-      ]
+      this.scrambles = this.$route.query.scr.split(";")
     },
 
     // 本操作
@@ -199,7 +200,6 @@ export default {
         this.keyDownState += 1
       }
 
-      this.currentState = this.keyUpState + this.KeyDownState
       this.actionTimer(this.keyUpState + this.keyDownState)
     },
     upTimer: function (e) {
@@ -208,7 +208,6 @@ export default {
 
       this.keyUpState = this.keyDownState
 
-      this.currentState = this.keyUpState + this.keyDownState
       this.actionTimer(this.keyUpState + this.keyDownState)
     },
     actionTimer: function(state) {
@@ -275,8 +274,8 @@ export default {
     },
 
     // filtersみたいなやつら
-    stateToString: function (state) {
-      switch(state) {
+    stateToString: function () {
+      switch(this.currentState) {
       case 0:
       case 1:
         return 'standby'

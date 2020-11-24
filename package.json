@@ -1,6 +1,6 @@
 {
-  "name": "lightcubetimer",
-  "version": "10000.0.0",
+  "name": "lightwait_competition_timer",
+  "version": "10000.1.0",
   "private": true,
   "homepage": "./",
   "scripts": {
