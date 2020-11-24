@@ -252,17 +252,19 @@ export default {
       this.currentInspectTimer = timer
       this.resetCurrentTimer()
     },
-    setDNF: function() {
+    setDNF: function(e) {
       const timer = this.currentTimerProps
       timer.isDNF = true
       this.updateCurrentTimer(timer)
+      e.target.blur()
     },
-    setPenalty: function() {
+    setPenalty: function(e) {
       const timer = this.currentTimerProps
       timer.isPenalty = true
       this.updateCurrentTimer(timer)
+      e.target.blur()
     },
-    cancelLastTime: function() {
+    cancelLastTime: function(e) {
       if (window.confirm('直前の記録を削除します。よろしいですか？')) {
         if(1 < this.currentScramble){
           this.currentScramble -= 1
@@ -271,6 +273,7 @@ export default {
         times.splice(this.currentScramble - 1, 1)
         this.times = times
       }
+      e.target.blur()
     },
 
     // filtersみたいなやつら
